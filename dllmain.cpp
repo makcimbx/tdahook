@@ -566,16 +566,16 @@ CResourceManager g_resources;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) 
 {
-	if (ul_reason_for_call == DLL_PROCESS_ATTACH)
-	{
+	switch (ul_reason_for_call) {
+	case DLL_PROCESS_ATTACH:
 		char path[MAX_PATH];
-		GetWindowsDirectoryA(path, sizeof(path));
+		GetWindowsDirectory(path, sizeof(path));
 
-		strcat_s(path, "\\System32\\winmm.dl");
-		winmm.dll = LoadLibraryA(path);
+		// Example: "\\System32\\version.dll"
+		strcat_s(path, "\\System32\\winmm.dll");
+		winmm.dll = LoadLibrary(path);
 		setupFunctions();
 
-		// Если нужна консоль, раскомментить
 		AllocConsole();
 		freopen("CONIN$", "r", stdin);
 		freopen("CONOUT$", "w", stdout);
@@ -589,15 +589,14 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		g_hookEngine.SetLogger(&g_logger);
 		g_hookEngine.SetResourceManager(&g_resources);
 
-		return g_hookEngine.HookGame();
-	}
-	else if (ul_reason_for_call == DLL_PROCESS_DETACH)
-	{
+		g_hookEngine.HookGame();
+
+		break;
+	case DLL_PROCESS_DETACH:
 		g_resources.SavePackage(CUtils::GetGameDirectory(L"\\tdahook.pkg"));
-
+		g_hookEngine.UnhookGame();
 		FreeLibrary(winmm.dll);
-		return g_hookEngine.UnhookGame();
+		break;
 	}
-
-	return TRUE;
+	return 1;
 }
