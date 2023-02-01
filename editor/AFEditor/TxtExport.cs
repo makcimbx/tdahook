@@ -10,7 +10,7 @@ namespace AFEditor
     /**
      * TXT file export/import
      * 
-     * Encoding: SHIFT-JIS
+     * Encoding: UTF-8
      */
     public class TxtExport
     {
@@ -26,7 +26,7 @@ namespace AFEditor
         {
             FileStream fs = new FileStream(filename, FileMode.Open);
 
-            StreamReader reader = new StreamReader(fs, Encoding.GetEncoding("SHIFT-JIS"));
+            StreamReader reader = new StreamReader(fs, Encoding.GetEncoding("UTF-8"));
 
             bool english = false;
             StringBuilder engText = new StringBuilder();
@@ -50,7 +50,7 @@ namespace AFEditor
                         jpnText.Replace("\r\n", "\n");
                         jpnText.Remove(jpnText.Length - 1, 1);
                         jpnText.Append('\x00');
-                        byte[] source = Encoding.GetEncoding("SHIFT-JIS").GetBytes(jpnText.ToString());
+                        byte[] source = Encoding.GetEncoding("UTF-8").GetBytes(jpnText.ToString());
 
                         try
                         {
@@ -94,8 +94,10 @@ namespace AFEditor
         {
             FileStream fs = new FileStream(filename, FileMode.Create);
 
-            StreamWriter writer = new StreamWriter(fs, Encoding.GetEncoding("SHIFT-JIS"));
-
+            StreamWriter writer = new StreamWriter(fs, Encoding.GetEncoding("UTF-8"));
+            writer.Write("");
+            writer.Flush();
+            fs.Flush();
             foreach (KeyValuePair<UInt32, PackageText> kv in resman.dialogue)
             {
                 if (kv.Value.sourceLen <= 2) continue;
@@ -108,7 +110,8 @@ namespace AFEditor
                 writer.Flush();
                 fs.Flush();
             }
-
+            writer.Write("\r\n");
+            writer.Flush();
             fs.Close();
         }
     }
