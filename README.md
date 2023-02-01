@@ -1,7 +1,11 @@
 # TDAHook
-Hacky tools for translating MUV-LUV TDA and Total Eclipse Games (AGES Mk2)
+Hacky tools for translating AGES Mk2 Games.
 
-# Special Thanks to:
+# Supported Games
+Muv-Luv Unlimited The Day After
+Muv Luv Total Eclipse
+
+# Special Thanks to
 https://github.com/MishaIac
 
 # References
