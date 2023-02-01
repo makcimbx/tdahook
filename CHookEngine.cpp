@@ -15,7 +15,7 @@ BOOL CHookEngine::HookGame()
 	HMODULE hmoduleOfProcess = GetModuleHandle(0);
 
 	byte pattern[] = { 0x44, 0x8B , 0x09 , 0xE9 , 0x08 , 0x00 , 0x00 , 0x00  , 0xCC , 0xCC , 0xCC , 0xCC , 0xCC , 0xCC , 0xCC , 0xCC };
-	UINT_PTR ptr = this->FindMemoryPattern("xxxxx???xxxxxxxx", pattern, ((UINT_PTR)hmoduleOfProcess), 0x320000);
+	UINT_PTR ptr = this->FindMemoryPattern("xxxxx???xxxxxxxx", pattern, ((UINT_PTR)hmoduleOfProcess), 0x360000);
 	if (ptr != 0)
 	{
 		m_logger->WriteLine("Pattern finder found location of TranslateText function: ").WritePointer(ptr);

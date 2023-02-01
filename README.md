@@ -1,5 +1,5 @@
 # TDAHook
-Hacky tools for translating MUV-LUV TDA Games (AGES Mk2)
+Hacky tools for translating MUV-LUV TDA and Total Eclipse Games (AGES Mk2)
 
 # Special Thanks to:
 https://github.com/MishaIac
