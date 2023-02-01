@@ -98,6 +98,7 @@ namespace AFEditor
             writer.Write("");
             writer.Flush();
             fs.Flush();
+            
             foreach (KeyValuePair<UInt32, PackageText> kv in resman.dialogue)
             {
                 if (kv.Value.sourceLen <= 2) continue;

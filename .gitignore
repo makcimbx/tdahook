@@ -1,3 +1,5 @@
 .vs
 /x64
 winmm.dll
+editor/AFEditor/bin
+editor/AFEditor/obj
