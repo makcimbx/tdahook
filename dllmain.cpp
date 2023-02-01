@@ -571,15 +571,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		char path[MAX_PATH];
 		GetWindowsDirectory(path, sizeof(path));
 
-		// Example: "\\System32\\version.dll"
 		strcat_s(path, "\\System32\\winmm.dll");
 		winmm.dll = LoadLibrary(path);
 		setupFunctions();
-
-		//AllocConsole();
-		//freopen("CONIN$", "r", stdin);
-		//freopen("CONOUT$", "w", stdout);
-		//freopen("CONOUT$", "w", stderr);
 
 		g_logger.Open(CUtils::GetGameDirectory(L"\\tdahook.log"));
 
