@@ -59,7 +59,27 @@ struct CompareCString
    }
 };
 
+struct ImageDimensions {
+	INT16 width;
+	INT16 height;
+};
+
+struct ImageInfo {
+	INT32 depth;
+	INT32 depth2;
+	INT32 unknown;
+	INT32 unknown2;
+	INT32 unknown3;
+#ifdef AFHOOK_TE_IMAGE_STRUCT
+	INT32 unknown4;
+	INT32 dataSize;
+#else
+	INT32 dataSize;
+#endif
+};
+
 typedef std::unordered_map<int, std::vector<PackageText*>*> TextLookupMap;
+typedef std::map<const char*, PackageImage*, CompareCString> ImageMap;
 
 class CResourceManager {
 public:
@@ -76,9 +96,13 @@ public:
 
 	// Used by afhook
 	bool TranslateText(const char* original, char* buffer, int bufferSize);
+	bool TranslateUserInterface(const char* original, char* buffer, int bufferSize);
+	unsigned char* TranslateImage(const char* hash, void* imageData, ImageDimensions dimensions, INT32 depth, INT32 flags);
 
 private:
 	std::map<UINT32, PackageText*> m_textDatabase;
+	std::map<UINT32, PackageText*> m_uiDatabase;
+	ImageMap m_imageDatabase;
 	TextLookupMap m_fastTextLookup;
 	UINT32 m_nextTextId;
 	UINT32 m_nextUIId;

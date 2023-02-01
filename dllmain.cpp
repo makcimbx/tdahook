@@ -576,10 +576,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		winmm.dll = LoadLibrary(path);
 		setupFunctions();
 
-		AllocConsole();
-		freopen("CONIN$", "r", stdin);
-		freopen("CONOUT$", "w", stdout);
-		freopen("CONOUT$", "w", stderr);
+		//AllocConsole();
+		//freopen("CONIN$", "r", stdin);
+		//freopen("CONOUT$", "w", stdout);
+		//freopen("CONOUT$", "w", stderr);
 
 		g_logger.Open(CUtils::GetGameDirectory(L"\\tdahook.log"));
 
