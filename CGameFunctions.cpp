@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "CGameFunctions.h"
+//#include <iostream>
+//#include <fstream>
 
 bool CGameFunctions::m_fixCharacters = false;
 char CGameFunctions::m_lastLine[TEXT_BUFFER];
@@ -14,7 +16,10 @@ const char* __fastcall CGameFunctions::TranslateText(void* a1, void* a2, void* a
 {
 	auto text = Orig_TranslateText(a1, a2, a3);
 
-	std::cout << "Text: " << text << '\n';
+	//std::cout << "Text: " << text << '\n';
+	//std::ofstream out;
+	//out.open("dump.txt", std::ios::app);
+	//out << text << std::endl;
 
 	if (*text == '\x00' || (*text == '\x05' && *(text + 1) == '\x00'))
 	{
