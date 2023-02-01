@@ -95,7 +95,10 @@ namespace AFEditor
             FileStream fs = new FileStream(filename, FileMode.Create);
 
             StreamWriter writer = new StreamWriter(fs, Encoding.GetEncoding("UTF-8"));
-
+            writer.Write("");
+            writer.Flush();
+            fs.Flush();
+            
             foreach (KeyValuePair<UInt32, PackageText> kv in resman.dialogue)
             {
                 if (kv.Value.sourceLen <= 2) continue;
@@ -108,7 +111,8 @@ namespace AFEditor
                 writer.Flush();
                 fs.Flush();
             }
-
+            writer.Write("\r\n");
+            writer.Flush();
             fs.Close();
         }
     }
