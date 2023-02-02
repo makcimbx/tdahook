@@ -39,7 +39,7 @@ BOOL CHookEngine::HookGame()
 		ptrUI = this->FindMemoryPattern("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx", patternUItda, ((UINT_PTR)hmoduleOfProcess), 0x240000);
 		if (ptrUI != 0)
 		{
-			m_logger->WriteLine("Pattern finder found location of TDA TranslateTextUI function: ").WritePointer(ptr);
+			m_logger->WriteLine("Pattern finder found location of TDA TranslateTextUI function: ").WritePointer(ptrUI);
 		}
 		else
 		{
