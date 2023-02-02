@@ -105,6 +105,42 @@ bool CResourceManager::TranslateText(const char* original, char* buffer, int buf
 	return false;
 }
 
+bool CResourceManager::TranslateUserInterface(const char* original, char* buffer, int bufferSize)
+{
+	UINT32 originalLen = strlen(original);
+
+	for (std::map<UINT32, PackageText*>::const_iterator it = m_uiDatabase.begin(); it != m_uiDatabase.end(); it++)
+	{
+		if (originalLen == it->second->sourceLen && strcmp(it->second->source, original) == 0)
+		{
+			if (it->second->translationLen > 0)
+			{
+				strncpy(buffer, it->second->translation, bufferSize - 1);
+				buffer[bufferSize - 1] = '\x00';
+
+				return true;
+			}
+
+			return false;
+		}
+	}
+
+	m_logger->WriteLine("New UI line found: ").WriteText(original);
+
+	PackageText* data = new PackageText;
+	data->sourceLen = originalLen;
+	data->translationLen = 0;
+	data->source = new char[data->sourceLen + 1];
+	data->translation = NULL;
+	strncpy(data->source, original, (data->sourceLen + 1));
+
+	m_uiDatabase.insert(std::pair<UINT32, PackageText*>(m_nextUIId, data));
+	m_nextUIId++;
+	m_modified = true;
+
+	return false;
+}
+
 // Loading/saving below
 void CResourceManager::LoadPackage(const char* filename)
 {

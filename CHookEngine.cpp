@@ -25,6 +25,29 @@ BOOL CHookEngine::HookGame()
 		m_logger->WriteLine("TranslateText Function not found");
 	}
 
+	// Total Eclipse
+	byte patternUI[] = { 0x48, 0x8B, 0xC4, 0x55, 0x56, 0x57, 0x41, 0x54, 0x41, 0x55, 0x41, 0x56, 0x41, 0x57, 0x48, 0x8D, 0x68, 0x88, 0x48, 0x81, 0xEC, 0x40, 0x01, 0x00, 0x00, 0x48, 0xC7, 0x45, 0xA8 };
+	UINT_PTR ptrUI = this->FindMemoryPattern("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx", patternUI, ((UINT_PTR)hmoduleOfProcess), 0x240000);
+	if (ptrUI != 0)
+	{
+		m_logger->WriteLine("Pattern finder found location of TE TranslateTextUI function: ").WritePointer(ptrUI);
+	}
+	else
+	{
+		// TDA
+		byte patternUItda[] = { 0x48, 0x8B, 0xC4, 0x55, 0x56, 0x57, 0x41, 0x54, 0x41, 0x55, 0x41, 0x56, 0x41, 0x57, 0x48, 0x8D, 0x68, 0x98, 0x48, 0x81, 0xEC, 0x30, 0x01, 0x00, 0x00, 0x48, 0xC7, 0x45, 0x98 };
+		ptrUI = this->FindMemoryPattern("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx", patternUItda, ((UINT_PTR)hmoduleOfProcess), 0x240000);
+		if (ptrUI != 0)
+		{
+			m_logger->WriteLine("Pattern finder found location of TDA TranslateTextUI function: ").WritePointer(ptr);
+		}
+		else
+		{
+			m_logger->WriteLine("TranslateTextUI Function not found");
+		}
+
+	}
+
 	// Magic
 	m_logger->WriteLine("Hooking game");
 
@@ -32,6 +55,7 @@ BOOL CHookEngine::HookGame()
 	DetourUpdateThread(GetCurrentThread());
 
 	if (ptr != 0) DetourAttach(&(PVOID&)ptr, CGameFunctions::TranslateText);
+	if (ptrUI != 0) DetourAttach(&(PVOID&)ptrUI, CGameFunctions::TranslateTextUI);
 
 	if (DetourTransactionCommit() != ERROR_SUCCESS)
 	{
@@ -41,6 +65,7 @@ BOOL CHookEngine::HookGame()
 
 	// Save old functions
 	CGameFunctions::Orig_TranslateText = (const char* (__fastcall*)(void*, void*, void*)) ptr;
+	CGameFunctions::Orig_TranslateTextUI = (void (__fastcall*)(void*, const char*)) ptrUI;
 
 	m_logger->WriteLine("Hooking done");
 
@@ -52,6 +77,7 @@ BOOL CHookEngine::UnhookGame()
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 	if (CGameFunctions::Orig_TranslateText != 0) DetourDetach(&(PVOID&)CGameFunctions::Orig_TranslateText, CGameFunctions::TranslateText);
+	if (CGameFunctions::Orig_TranslateTextUI != 0) DetourDetach(&(PVOID&)CGameFunctions::Orig_TranslateTextUI, CGameFunctions::TranslateTextUI);
 
 	return (DetourTransactionCommit() == ERROR_SUCCESS);
 }
