@@ -5,7 +5,7 @@ CFileLogger::~CFileLogger()
 	m_stream << std::endl;
 
 	WriteTime();
-	m_stream << " AFHook terminated" << std::endl << "----------------------------------" << std::endl;
+	m_stream << " TDAHook terminated" << std::endl << "----------------------------------" << std::endl;
 
 	m_stream.close();
 }
@@ -15,7 +15,7 @@ void CFileLogger::Open(const std::wstring& name)
 	m_stream.open(name, std::ios::out | std::ios::app);
 
 	WriteTime();
-	WriteText(" AFHook loaded");
+	WriteText(" TDAHook loaded");
 }
 
 void CFileLogger::WriteTime()
