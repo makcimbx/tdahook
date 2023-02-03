@@ -1,6 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+
 #include "CGameFunctions.h"
 #include "encoding.h"
+#include <experimental/filesystem>
 
 char CGameFunctions::m_textBuffer[TEXT_BUFFER];
 
@@ -13,8 +16,16 @@ void* (__fastcall* CGameFunctions::Orig_CreateFont) (void*, const char*, const c
 void* __fastcall CGameFunctions::CreateFontHook(void* a1, const char* a2, const char* a3)
 {
 	auto pathToTtfInUTF16 = CUtils::GetGameDirectory(L"\\MLFont.ttf");
-	auto pathToNewFontInUTF8 = encoding::utf16_to_utf8(pathToTtfInUTF16);
-	return Orig_CreateFont(a1, a2, pathToNewFontInUTF8.c_str());
+	auto fontExist = std::experimental::filesystem::exists(pathToTtfInUTF16);
+	if (fontExist)
+	{
+		auto pathToNewFontInUTF8 = encoding::utf16_to_utf8(pathToTtfInUTF16);
+		return Orig_CreateFont(a1, a2, pathToNewFontInUTF8.c_str());
+	}
+	else
+	{
+		return Orig_CreateFont(a1, a2, a3);
+	}
 }
 
 const char* __fastcall CGameFunctions::TranslateText(void* a1, void* a2, void* a3)
