@@ -25,6 +25,7 @@
     <ClCompile Include="CResourceManager.cpp" />
     <ClCompile Include="CUtils.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="encoding.cpp" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="winmm.asm" />
@@ -38,6 +39,7 @@
     <ClInclude Include="CLogger.h" />
     <ClInclude Include="CResourceManager.h" />
     <ClInclude Include="CUtils.h" />
+    <ClInclude Include="encoding.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

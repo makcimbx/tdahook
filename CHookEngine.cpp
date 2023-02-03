@@ -48,6 +48,18 @@ BOOL CHookEngine::HookGame()
 
 	}
 
+	// TDA Font
+	byte patternFont[] = { 0x48, 0x89, 0x5C, 0x24, 0x10, 0x48, 0x89, 0x6C, 0x24, 0x18, 0x48, 0x89, 0x74, 0x24, 0x20, 0x57, 0x48, 0x83, 0xEC, 0x50, 0x48, 0x8B, 0x41, 0x10, 0x49, 0x8B, 0xF8, 0x48, 0x8B, 0xDA, 0x48, 0x8B };
+	UINT_PTR ptrFont = this->FindMemoryPattern("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", patternFont, ((UINT_PTR)hmoduleOfProcess), 0x240000);
+	if (ptrFont != 0)
+	{
+		m_logger->WriteLine("Pattern finder found location of TDA CreateFont function: ").WritePointer(ptrFont);
+	}
+	else
+	{
+		m_logger->WriteLine("TDA CreateFont Function not found");
+	}
+
 	// Magic
 	m_logger->WriteLine("Hooking game");
 
@@ -56,6 +68,7 @@ BOOL CHookEngine::HookGame()
 
 	if (ptr != 0) DetourAttach(&(PVOID&)ptr, CGameFunctions::TranslateText);
 	if (ptrUI != 0) DetourAttach(&(PVOID&)ptrUI, CGameFunctions::TranslateTextUI);
+	if (ptrFont != 0) DetourAttach(&(PVOID&)ptrFont, CGameFunctions::CreateFontHook);
 
 	if (DetourTransactionCommit() != ERROR_SUCCESS)
 	{
@@ -66,6 +79,7 @@ BOOL CHookEngine::HookGame()
 	// Save old functions
 	CGameFunctions::Orig_TranslateText = (const char* (__fastcall*)(void*, void*, void*)) ptr;
 	CGameFunctions::Orig_TranslateTextUI = (void (__fastcall*)(void*, const char*)) ptrUI;
+	CGameFunctions::Orig_CreateFont = (void* (__fastcall*)(void*, const char*, const char*)) ptrFont;
 
 	m_logger->WriteLine("Hooking done");
 
@@ -78,6 +92,7 @@ BOOL CHookEngine::UnhookGame()
 	DetourUpdateThread(GetCurrentThread());
 	if (CGameFunctions::Orig_TranslateText != 0) DetourDetach(&(PVOID&)CGameFunctions::Orig_TranslateText, CGameFunctions::TranslateText);
 	if (CGameFunctions::Orig_TranslateTextUI != 0) DetourDetach(&(PVOID&)CGameFunctions::Orig_TranslateTextUI, CGameFunctions::TranslateTextUI);
+	if (CGameFunctions::Orig_CreateFont != 0) DetourDetach(&(PVOID&)CGameFunctions::Orig_CreateFont, CGameFunctions::CreateFontHook);
 
 	return (DetourTransactionCommit() == ERROR_SUCCESS);
 }

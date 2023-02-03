@@ -1,6 +1,9 @@
 # TDAHook
 Hacky tools for translating AGES Mk2 Games.
 
+# How to use
+Build and move winmm.dll and MLFont.ttf to the game folder.
+
 # Supported Games
 * Muv-Luv Unlimited: The Day After - Episode 00-03
 * Muv-Luv Alternative Total Eclipse Remastered
