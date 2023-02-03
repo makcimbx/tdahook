@@ -31,6 +31,19 @@ BOOL CHookEngine::HookGame()
 	if (ptrUI != 0)
 	{
 		m_logger->WriteLine("Pattern finder found location of TE TranslateTextUI function: ").WritePointer(ptrUI);
+		// TE 1.0.27
+		DWORD dwProtect;
+		auto backlogptr = ((UINT_PTR)hmoduleOfProcess) + 0x35A846;
+		if (VirtualProtect((PVOID&)backlogptr, 1, PAGE_EXECUTE_READWRITE, &dwProtect))
+		{
+			memset((PVOID&)backlogptr, 0x66, 1);
+			VirtualProtect((PVOID&)backlogptr, 1, dwProtect, &dwProtect);
+			m_logger->WriteLine("TE Backlog Fixed");
+		}
+		else
+		{
+			m_logger->WriteLine("TE Backlog Fix Failed");
+		}
 	}
 	else
 	{
