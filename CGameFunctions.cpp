@@ -32,7 +32,13 @@ const char* __fastcall CGameFunctions::TranslateText(void* a1, void* a2, void* a
 {
 	auto text = Orig_TranslateText(a1, a2, a3);
 
-	bool result = m_resources->TranslateText(text, m_textBuffer, TEXT_BUFFER);
+	char* result1;
+	result1 = (char*)calloc(strlen((char*)a2) + strlen(text) + 2, sizeof(char));
+	strcpy(result1, (char*)a2);
+	strcat(result1, ":");
+	strcat(result1, text);
+
+	bool result = m_resources->TranslateText(result1, m_textBuffer, TEXT_BUFFER);
 
 	if (result)
 	{
