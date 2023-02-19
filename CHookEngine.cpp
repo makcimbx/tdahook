@@ -79,7 +79,17 @@ BOOL CHookEngine::HookGame()
 		}
 		else
 		{
-			m_logger->WriteLine("CreateFont Function not found");
+			// TDA New Font
+			byte patternFontTDA[] = { 0x40, 0x57, 0x48, 0x83, 0xEC, 0x50, 0x48, 0xC7, 0x44, 0x24, 0x20, 0xFE, 0xFF, 0xFF, 0xFF, 0x48, 0x89, 0x5C, 0x24, 0x78, 0x48, 0x8B, 0x05, 0xC5, 0x5E, 0x71, 0x00, 0x48, 0x33, 0xC4, 0x48, 0x89 };
+			ptrFont = this->FindMemoryPattern("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", patternFontTDA, ((UINT_PTR)hmoduleOfProcess), 0x240000);
+			if (ptrFont != 0)
+			{
+				m_logger->WriteLine("Pattern finder found location of TDA CreateFont function: ").WritePointer(ptrFont);
+			}
+			else
+			{
+				m_logger->WriteLine("CreateFont Function not found");
+			}
 		}
 	}
 
